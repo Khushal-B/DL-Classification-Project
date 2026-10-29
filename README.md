@@ -13,7 +13,7 @@ I then designed a detect-then-reason inference pipeline: segment each test image
 1. `src/rule_discovery.py` - fit a decision tree on ~50 hand-labeled images to find the hidden rule.
 2. `src/make_crops.py` - use color segmentation (OpenCV) to cut each scene into 4 single-object crops.
 3. `src/auto_label.py` - label each crop's shape with Qwen-VL.
-4. `src/train.py` - train ResNet-18 to classify the shape of each crop.
+4. `src/train.py` - train a multi-head ResNet-18 (shared backbone, one shape head per object slot) on the crops.
 5. `src/infer.py` - segment test images, predict the 4 shapes, and apply the rule.
 
 ## Usage

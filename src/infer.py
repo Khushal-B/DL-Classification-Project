@@ -5,7 +5,7 @@ import sys
 import cv2
 import torch
 
-from config import SHAPES
+from config import COLORS, SHAPES
 from segment import segment_image
 from train import build_model
 
@@ -30,6 +30,7 @@ if __name__ == "__main__":
         crops = [cv2.cvtColor(c, cv2.COLOR_BGR2RGB) for c in segment_image(img)]
         x = torch.stack([torch.from_numpy(c).permute(2, 0, 1).float() / 255.0 for c in crops]).to(device)
         with torch.no_grad():
-            preds = model(x).argmax(1).tolist()
+            slots = torch.arange(len(COLORS), device=device)
+            preds = model(x, slots).argmax(1).tolist()
         shapes = [SHAPES[p] for p in preds]
         print(f"{fname},{rule(shapes)}")
